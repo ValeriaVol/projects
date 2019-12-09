@@ -4,6 +4,19 @@ import nltk
 from nltk.corpus import stopwords
 from pymorphy2 import MorphAnalyzer
 import pickle
+from bs4 import BeautifulSoup
+import requests
+import os
+page = requests.get('https://www.kinopoisk.ru/film/568289/ord/rating/perpage/200/#list')
+parsed = BeautifulSoup (page.content, 'html.parser')
+reviews = parsed.find_all("span", itemprop="reviewBody")
+reviewstexts=[i.get_text() for i in reviews]
+newpath = r'C:/Users/Валерия/reviews'
+if not os.path.exists(newpath):
+            os.makedirs(newpath)
+with open(newpath + '\\'+ 'bohemian'+'.txt','a',encoding="utf-8") as of:
+    for i in reviewstexts:
+        of.writelines(i)
 
 morph = MorphAnalyzer()
 punct = punctuation + '«»—…“”*№–'
